@@ -12,6 +12,12 @@ import lombok.Data;
 @Data
 public class Stock {
 
-    private  int  stock = 5000;
+    private Long id;
+
+    private String productCode;
+
+    private String wareHouse;
+
+    private String stock;
 
 }

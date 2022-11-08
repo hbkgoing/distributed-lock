@@ -1,6 +1,9 @@
 package com.example.distributedlock.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.distributedlock.mapper.StockMapper;
 import com.example.distributedlock.pojo.Stock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,12 +17,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class StockService {
 
-    //直接在这里new一个Stock。service初始化的时候会直接new出来一个成员变量实例。
-    private Stock stock = new Stock();
+    @Autowired
+    StockMapper stockMapper;
 
     public synchronized void  deDuct() {
-        stock.setStock(stock.getStock()-1);
-        System.out.println("库存余量："+ stock.getStock());
+        Stock stock = stockMapper.selectOne(new LambdaQueryWrapper<Stock>().eq(Stock::getProductCode, "10010"));
+        Integer value = Integer.parseInt(stock.getStock());
+        stock.setStock(String.valueOf(value-1));
+//        System.out.println("库存余量："+ stock.getStock());
+        stockMapper.updateById(stock);
     }
 
 }
